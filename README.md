@@ -794,7 +794,7 @@ Evaluate how wall technologies affect indoor thermal response.
 
 Compare:
 
-```text
+```
 5 materials × ACnormal
 5 materials × AC24h
 ```
@@ -805,7 +805,7 @@ using total cooling energy over the three-day period.
 
 # Overall workflow
 
-```text
+```
 Original Unit JSON
         │
         ▼
@@ -900,54 +900,30 @@ tampines_idf
 The most important lesson is to **validate each stage before scaling it up**. A small geometry mistake becomes much harder to identify once it is repeated over many storeys and 10 simulation scenarios.
 
 Before proceeding, check:
-
-```text
-Unit JSON
-    ↓
-No overlapping/self-retracing polygons
-
-Block JSON
-    ↓
-Correct unit location and orientation
-
-Single-storey IDF
-    ↓
-Correct walls/windows/boundary conditions
-
-Full-block baseline
-    ↓
-EnergyPlus completes with no Severe Errors
-
-Material scenarios
-    ↓
-Only Project Wall material changes
-
-3-day scenarios
-    ↓
-Correct RunPeriod + EPW + hourly outputs
-```
-
-Warnings should also be reviewed rather than automatically ignored. For example, an EnergyPlus warning such as:
-
-```text
-Could not triangulate surface
-```
-
-may indicate an awkward concave polygon or vertex-order issue even if the simulation completes successfully.
+- Material inputs correct (project wall material correctly selected)
+- Correct weatherfile (epw file) and RunPeriod
+- Correct number of schedules:compact (AlwaysOn, AlwaysOff, Aircon_normal, Aircon_24hr, Living_Infiltration_AirCon)
+- Correct schedules selected for 24hrs AC or normal AC hours
+- No. of zones, windows, infiltration zones, and AC zones correct (100 rooms = 100 zones)
+- Output:variable frequency correct (hourly or monthly)
+- Infiltration zones ACH assigned 1 or 0.2 ACH correctly (especially living room)
+- HVAC schedule correct (heating AlwaysOff, cooling depends on schedule, dehumidify at 60 and no humidifier, thermostat setpoint 25)
 
 # Files the next intern should understand first
 
-Before modifying the workflow, the next intern should identify and understand these main file groups:
-
-```text
-1. Unit-template JSON
-2. Block-layout JSON
-3. EnergyPlus IDF template
-4. JSON → IDF generation script
-5. Annual scenario-generation script
-6. Three-day scenario-generation script
-7. Annual post-processing script
-8. Three-day post-processing script
+Before modifying the workflow, the next intern should identify and understand these main file groups. Remember to check and replace *file path* accordingly:
 ```
+Stage 1
+1. unittemplate_rm.json
+3. unittemplate_EM.json
+4. mirror_unittemplate.ipynb
+5. view_json.ipynb
 
-The safest workflow is to modify the **upstream JSON/generation script** and regenerate the IDFs rather than manually editing many generated IDFs individually.
+Stage 2
+1. blk863_EM_script.ipynb and blk863b_script.ipynb and blk864_script.ipynb
+2. idf_template_SL.idf
+3. view_idf.ipynb
+
+Stage 4
+1. post_process_tampines.ipynb
+```
