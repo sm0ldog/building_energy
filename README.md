@@ -7,8 +7,6 @@ The main model inputs are JSON floorplans and an EnergyPlus IDF template. The fi
 ---
 
 ## Stage 1: Generate unit-template mirrors
-
-### Objective
 Create all required mirrored versions of the original HDB unit templates so they can be reused when assembling different block layouts.
 
 ### Input
@@ -16,10 +14,10 @@ Create all required mirrored versions of the original HDB unit templates so they
 - Each unit template contains:
   - room names
   - room coordinates
-  - façade definitions
+  - façade coordinates
   - window locations
   - corridor-facing walls
-  - WWR information where applicable
+  - WWR information
 
 ### Process
 For the standard HDB unit templates, generate three additional orientations:
@@ -43,9 +41,9 @@ After mirroring, coordinates should be cleaned so that:
 - room geometry is kept consistent between the original and mirrored versions
 
 Save the resulting templates into a new JSON file, for example:
-
+```
 unittemplate_rm_mirror.json`
-
+```
 ### Executive Maisonette exception
 For Executive Maisonette units, mirrored templates do **not** need to be generated automatically.
 
@@ -79,12 +77,9 @@ Before proceeding:
 ---
 
 # Stage 2: Generate block floorplan
-
-### Objective
 Combine the required unit templates into the actual floorplate of a HDB block.
 
 ### Input
-
 - Unit-template JSON from Stage 1
 - Required unit types for the block
 - Unit numbers
@@ -92,7 +87,6 @@ Combine the required unit templates into the actual floorplate of a HDB block.
 - Block footprint/layout information
 
 Blocks developed include:
-
 ```
 blk863b
 blk864
@@ -106,10 +100,9 @@ For each block:
 1. Read the required unit templates from JSON.
 2. Select the appropriate original or mirrored template.
 3. Extract the required room geometry.
-4. Rotate units where required.
-5. Translate each unit to its final XY position.
-6. Assign the actual HDB unit number.
-7. Combine all units into one block-level JSON floorplan.
+4. Rotate and translate units where required.
+5. Assign a HDB unit number.
+6. Combine all units into one block-level JSON floorplan.
 
 Typical geometric operations include:
 
@@ -124,24 +117,7 @@ join units
 ↓
 normalise coordinates
 ```
-
-The block JSON should retain information for:
-
-- unit number
-- room name
-- room polygon
-- window façade
-- corridor façade
-- WWR
-
-For Executive Maisonette blocks, the floorplate contains separate:
-
-```text
-lower
-upper
-```
-
-layouts.
+For Executive Maisonette blocks, the floorplate contains separate *upper* and *lower* layouts.
 
 These alternate vertically when generating the full block:
 
@@ -168,55 +144,41 @@ blk863_EM.json
 Plot the complete floorplate and confirm:
 
 - units are in their intended positions
-- unit numbers are correct
-- rooms do not overlap
-- shared room boundaries line up exactly
 - exterior façades are correct
 - corridor-facing walls are correctly identified
 - window façades are correctly oriented
 
 This JSON becomes the main geometry input for all following stages.
 
+Use
+```
+view_json.ipynb
+```
+to verify the HDB JSON output.
+
 ---
 
 # Stage 3: Generate single-storey block for geometry and IDF testing
-
-### Objective
 Generate a simplified EnergyPlus model before creating the full multistorey block.
 
 This stage is mainly for debugging and geometry verification.
 
 ### Input
-
 - Block floorplan JSON from Stage 2
 - EnergyPlus template IDF
 - EnergyPlus IDD
 
 ### Process
-
 Convert every room polygon into an EnergyPlus thermal zone.
 
-Typical zone naming:
-
-```
-Unit 452_livingroom Storey 0
-Unit 452_masterroom Storey 0
-Unit 452_bedroom2 Storey 0
-```
-
 Each room is extruded vertically to create:
-
 - floor
 - ceiling
 - walls
 
-Typical floor-to-floor/zone height used:
+Typical floor-to-floor/zone height used: 2.8m
 
-```text
-2.8 m
-```
-
-The building base elevation can also be included where required.
+The building base elevation = 3.6m can also be included for HDB blocks with unoccupied void decks.
 
 ### Surface setup
 
@@ -336,22 +298,12 @@ Always On
 ```
 
 ### Validation
-
-Run the single-storey model and check:
-
-- EnergyPlus geometry warnings
-- surface matching
-- incorrect boundary conditions
-- duplicate surfaces
-- invalid polygons
-- window placement
-- HVAC assignment
-- infiltration assignment
-
-Visualise the IDF and inspect each wall.
+Visualise the IDF and inspect each wall with
+```
+view_idf.ipynb
+```
 
 It is useful to colour walls according to their condition:
-
 ```
 Window wall              → blue
 Corridor wall            → green
@@ -360,9 +312,7 @@ Other exterior wall      → red
 ```
 
 ### Output
-
 Example:
-
 ```
 blk863_EM_single.idf
 ```
@@ -372,8 +322,6 @@ This stage should be completed successfully before generating the full block.
 ---
 
 # Stage 4: Generate annual multistorey HDB IDF templates
-
-### Objective
 Expand the verified single-storey geometry into the complete multistorey block and create the two baseline annual simulation models.
 
 ### Input
@@ -463,14 +411,10 @@ blk863_EM_normal.idf
 blk863_EM_24hAC.idf
 ```
 
-or equivalent block-specific names.
-
 ### Validation
-
 Run both baseline models first before generating all material variants.
 
 Check:
-
 - zero Severe Errors
 - reasonable cooling loads
 - correct number of zones
@@ -478,11 +422,14 @@ Check:
 - normal and 24 h AC schedules differ as expected
 - all requested monthly outputs appear in the CSV
 
+```
+view_idf.ipynb
+```
+can also be used to verify the walls are assigned correct properties.
+
 ---
 
 # Stage 5: Generate wall-material scenarios
-
-### Objective
 Create separate annual EnergyPlus models to compare wall technologies.
 
 ### Input
@@ -523,10 +470,7 @@ Do **not** change:
 - ceiling
 - windows
 - geometry
-- HVAC
-- infiltration
-- schedules
-
+- 
 This allows the wall technology to be isolated as the primary comparison variable.
 
 ### Scenario matrix
@@ -612,7 +556,6 @@ For comparison plots, ACnormal and AC24h should use the same Y-axis scale for th
 
 # Stage 6: Generate three-day simulation scenarios
 
-### Objective
 Create short-duration simulations for detailed hourly analysis of indoor temperature and cooling demand.
 
 These simulations are primarily used to study short-term thermal behaviour that cannot be seen clearly from monthly annual outputs.
@@ -666,15 +609,13 @@ Rather than outputting every temperature in the whole block, representative stor
 
 For example:
 
-```text
+```
 Storey 0
 Storey 4
 Storey 8
 ```
 
 for the Executive Maisonette model.
-
-For other blocks, representative levels may differ depending on the block height.
 
 These levels allow comparison of:
 
