@@ -850,9 +850,9 @@ Before proceeding, check:
 - Infiltration zones ACH assigned 1 or 0.2 ACH correctly (especially living room)
 - HVAC schedule correct (heating AlwaysOff, cooling depends on schedule, dehumidify at 60 and no humidifier, thermostat setpoint 25)
 
-# Files the next intern should understand first
+# Key Files
 
-Before modifying the workflow, the next intern should identify and understand these main file groups. Remember to check and replace *file path* accordingly:
+Before modifying the workflow, understand these main file groups. Remember to check and replace *file path* accordingly:
 ```
 Stage 1
 1. unittemplate_rm.json
@@ -861,7 +861,7 @@ Stage 1
 5. view_json.ipynb
 
 Stage 2
-1. blk863_EM_script.ipynb and blk863b_script.ipynb and blk864_script.ipynb
+1. blk863_EM_script.ipynb, blk863b_script.ipynb and blk864_script.ipynb
 2. idf_template_SL.idf
 3. view_idf.ipynb
 
