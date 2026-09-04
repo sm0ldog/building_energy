@@ -1,9 +1,0 @@
-material,schedule,baseline_material,total_cooling_kWh,concrete_total_cooling_kWh,total_pct_difference_vs_concrete,sensible_cooling_kWh,concrete_sensible_cooling_kWh,sensible_pct_difference_vs_concrete,latent_cooling_kWh,concrete_latent_cooling_kWh,latent_pct_difference_vs_concrete
-White paint,AC normal,Concrete,1085.7200,1900.8329,-42.8819,850.8672,1637.1248,-48.0267,234.8528,263.7081,-10.9421
-Cool paint,AC normal,Concrete,1447.1568,1900.8329,-23.8672,1196.2759,1637.1248,-26.9282,250.8808,263.7081,-4.8642
-Evaporative paint,AC normal,Concrete,970.3753,1900.8329,-48.9500,741.1951,1637.1248,-54.7258,229.1802,263.7081,-13.0932
-Green wall,AC normal,Concrete,1018.4396,1900.8329,-46.4214,786.5838,1637.1248,-51.9533,231.8558,263.7081,-12.0786
-White paint,AC 24h,Concrete,1764.6328,3033.3278,-41.8252,1424.4612,2661.0410,-46.4698,340.1716,372.2868,-8.6265
-Cool paint,AC 24h,Concrete,2346.2144,3033.3278,-22.6521,1988.8136,2661.0410,-25.2618,357.4009,372.2868,-3.9985
-Evaporative paint,AC 24h,Concrete,1586.1393,3033.3278,-47.7096,1254.2948,2661.0410,-52.8645,331.8445,372.2868,-10.8632
-Green wall,AC 24h,Concrete,2092.8351,3033.3278,-31.0053,1754.3485,2661.0410,-34.0728,338.4866,372.2868,-9.0791
